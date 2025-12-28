@@ -2,12 +2,12 @@ CREATE DATABASE Bai6;
 USE Bai6;
 
 CREATE TABLE Class (
-    class_id INT AUTO_INCREMENT PRIMARY KEY,
+    class_id INT PRIMARY KEY,
     class_name VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE Student (
-    student_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     class_id INT NOT NULL,
@@ -19,13 +19,13 @@ CREATE TABLE Student (
 );
 
 CREATE TABLE Teacher (
-    teacher_id INT AUTO_INCREMENT PRIMARY KEY,
+    teacher_id INT PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE Subject (
-    subject_id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_id INT PRIMARY KEY,
     subject_name VARCHAR(100) NOT NULL UNIQUE,
     credit INT NOT NULL CHECK (credit > 0),
     teacher_id INT NOT NULL,
@@ -68,4 +68,5 @@ CREATE TABLE Score (
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+
 SHOW TABLES;

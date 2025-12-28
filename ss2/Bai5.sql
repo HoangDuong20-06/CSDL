@@ -2,12 +2,12 @@ CREATE DATABASE Bai5;
 USE Bai5;
 
 CREATE TABLE Student (
-    student_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Subject (
-    subject_id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_id INT PRIMARY KEY,
     subject_name VARCHAR(100) NOT NULL
 );
 
@@ -15,13 +15,10 @@ CREATE TABLE Score (
     student_id INT NOT NULL,
     subject_id INT NOT NULL,
 
-    process_score DECIMAL(3,1) NOT NULL,
-    final_score   DECIMAL(3,1) NOT NULL,
+    process_score DECIMAL(3,1) NOT NULL CHECK (process_score BETWEEN 0 AND 10),
+    final_score   DECIMAL(3,1) NOT NULL CHECK (final_score BETWEEN 0 AND 10),
 
     PRIMARY KEY (student_id, subject_id),
-
-    CHECK (process_score BETWEEN 0 AND 10),
-    CHECK (final_score BETWEEN 0 AND 10),
 
     FOREIGN KEY (student_id)
         REFERENCES Student(student_id)
