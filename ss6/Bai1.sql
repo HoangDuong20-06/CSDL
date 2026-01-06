@@ -3,7 +3,7 @@ DROP DATABASE IF EXISTS Bai1ss6;
 CREATE DATABASE Bai1ss6;
 USE Bai1ss6;
 CREATE TABLE Customers (
-      customer_id INT UNIQUE,
+      customer_id INT UNIQUE PRIMARY KEY,
       full_name VARCHAR(255),
       city VARCHAR(225)
 );
