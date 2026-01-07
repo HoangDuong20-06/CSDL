@@ -56,6 +56,7 @@ INSERT INTO bookings (guest_id, room_id, check_in, check_out) VALUES
 (3, 4, '2023-12-20', '2023-12-25'), -- 5 ngày
 (3, 6, '2024-05-01', '2024-05-06'), -- 5 ngày
 (4, 1, '2024-06-10', '2024-06-11'); -- 1 ngày
+-- Phân truy vấn cơ bản
 -- Liệt kê danh sách khách hàng và thông tin khách hàng
 SELECT * FROM guests;
 -- Liệt kê danh sách các loại phòng
@@ -68,7 +69,47 @@ SELECT * FROM rooms WHERE price_per_day > 1000000;
 SELECT * FROM bookings WHERE YEAR(check_in) = 2024 ;
 -- Liệt kê số lượng phòng của từng loại phòng
 SELECT room_type, COUNT(*) FROM rooms GROUP BY room_type;
+-- Phần Truy vấn nâng cao
 -- Liệt kê mỗi khách đặt phòng bao nhiêu lần
-SELECT guest_id, COUNT(*) FROM bookings GROUP BY guest_id;
-
+SELECT g.guest_name, COUNT(b.booking_id) AS so_lan_dat 
+FROM bookings b
+LEFT JOIN guests g ON g.guest_id = b.guest_id
+GROUP BY g.guest_id;
+-- LIệt kê danh sách các lần dặt phòng với thông tin chi tiết
+SELECT g.guest_name, r.room_type, b.check_in FROM bookings b
+JOIN guests g ON b.guest_id = g.guest_id
+JOIN rooms r ON b.room_id = r.room_id;
+-- Hiển thị tổng doanh thu của mỗi phòng
+SELECT r.room_id, SUM((b.check_out - b.check_in) * r.price_per_day) AS doanh_thu
+FROM rooms r
+JOIN bookings b ON r.room_id = b.room_id
+GROUP BY r.room_id, r.price_per_day;
+-- Hiện thị doanh thu của từng loại phòng
+SELECT r.room_type, SUM((b.check_out - b.check_in) * r.price_per_day) AS doanh_thu
+FROM rooms r
+JOIN bookings b ON r.room_id = b.room_id
+GROUP BY r.room_type;
+-- Tìm những khách hàng có 2 lần đặt phòng trở lên
+SELECT g.guest_name, COUNT(b.booking_id) AS so_lan_dat
+FROM guests g
+JOIN bookings b ON g.guest_id = b.guest_id
+GROUP BY g.guest_name
+HAVING COUNT(b.booking_id) >= 2;
+-- Tìm loại phòng có số lượt đặt phòng nhiều nhất
+SELECT room_type, COUNT(b.booking_id) AS so_lan_dat
+FROM rooms r
+JOIN bookings b ON r.room_id = b.room_id
+GROUP BY room_type;
+-- Phân truy vấn lồng
+-- Hiển thị những phòng có giá thuê cao hơn giá trung bình của tất cả các phòng
+SELECT * FROM rooms WHERE price_per_day > ( SELECT AVG(price_per_day) FROM rooms);
+-- Hiển thị những khách hàng chưa từng đặt phòng
+SELECT * FROM guests WHERE guest_id NOT IN (SELECT guest_id FROM bookings);
+-- Tìm được phòng đặt nhiều lần nhất
+SELECT r.room_id, r.room_type, COUNT(b.booking_id) AS so_lan_dat
+FROM rooms r
+JOIN bookings b ON r.room_id = b.room_id
+GROUP BY r.room_id, r.room_type
+ORDER BY so_lan_dat DESC
+LIMIT 1;
 SET SQL_SAFE_UPDATES = 1;
