@@ -91,4 +91,19 @@ FROM Student s
 JOIN Department d ON s.DeptID = d.DeptID
 GROUP BY DeptName;
 SELECT * FROM View_StudentCountByDept;
---
+DELIMITER $$
+CREATE Procedure GetTopScoreStudent(
+  IN p_CourseID CHAR(6),
+  OUT p_username VARCHAR(200)
+)
+BEGIN
+    DECLARE top INT DEFAULT 0;
+    SELECT MAX(score) INTO top FROM Enrollment e
+    JOIN Course c ON e.CourseID = p_CourseID;
+    SELECT s.Fullname INTO p_username FROM Student s
+    JOIN Enrollment e ON s.StudentID = e.StudentID
+    WHERE e.Score = top;
+END $$
+SET @fullname = '';
+call GetTopScoreStudent('C00001',@fullname);
+SELECT @fullname;
